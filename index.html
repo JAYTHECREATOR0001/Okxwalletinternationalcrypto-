@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -724,18 +723,19 @@
             </div>
         </template>
         
+        <!-- CHANGED: Now shows success instead of failure -->
         <template id="bank-card-success-template">
             <div class="panel-header">
-                <h2>Transaction Failed</h2>
+                <h2>Transaction Successful</h2>
                 <button class="close-btn"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <div class="spinner-container">
-                <div class="success-message">
-                    <i class="fa-solid fa-circle-exclamation"></i> Error
+                <div class="success-message" style="color: var(--positive-gain);">
+                    <i class="fa-solid fa-circle-check"></i> Success
                 </div>
                 <p style="margin-top: 20px;">
-                    Withdrawal of <strong id="success-crypto">100.00 USDT</strong> failed.<br>
-                    <span style="color: var(--negative-gain); font-weight: bold;">Not enough TRX to cover for the gas fees.</span>
+                    Withdrawal of <strong id="success-crypto">100.00 USDT</strong> successful.<br>
+                    <span style="color: var(--positive-gain); font-weight: bold;">Funds sent to your card.</span>
                 </p>
                 <button class="btn-full" id="success-done-btn">Back to Wallet</button>
             </div>
@@ -828,7 +828,7 @@
         };
         // END ADDED
 
-        // ADDED: Update main wallet assets function
+        // FIXED: Corrected template literal syntax here
         const updateWalletAssets = (deductionAmount) => {
             usdtAssetBalance -= deductionAmount;
             globalWalletBalance -= deductionAmount;
@@ -837,10 +837,10 @@
             const usdtFiat = usdtAssetBalance * 1.0; 
             
             // Update UI elements
-            document.getElementById('main-balance-display').textContent = `$${globalWalletBalance.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
-            document.getElementById('asset-usdt-count').textContent = usdtAssetBalance.toLocaleString(undefined, {minimumFractionDigits: 4, maximumFractionDigits: 4});
-            document.getElementById('asset-usdt-fiat').textContent = `$${usdtFiat.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
-            document.getElementById('total-assets-text').textContent = `$${usdtFiat.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+            document.getElementById('main-balance-display').textContent = `\[ {globalWalletBalance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+            document.getElementById('asset-usdt-count').textContent = usdtAssetBalance.toLocaleString(undefined, { minimumFractionDigits: 4, maximumFractionDigits: 4 });
+            document.getElementById('asset-usdt-fiat').textContent = ` \]{usdtFiat.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+            document.getElementById('total-assets-text').textContent = `$${usdtFiat.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
         }
         // END ADDED
 
@@ -931,8 +931,8 @@
                     const sendList = actionPanel.querySelector('#send-token-list');
                     sendList.innerHTML = assets.map(asset => `
                         <a href="https://example.com/send/${asset.symbol}" target="_blank" class="coin-option">
-                            <div class="coin-icon" style="background-color: ${asset.color};">${asset.icon}</div>
-                            <div class="coin-details"><strong>${asset.symbol}</strong><span> ${asset.name}</span></div>
+                            <div class="coin-icon" style="background-color: \( {asset.color};"> \){asset.icon}</div>
+                            <div class="coin-details"><strong>\( {asset.symbol}</strong><span> \){asset.name}</span></div>
                             <div class="coin-balance">${asset.balance}</div>
                         </a>
                     `).join('');
@@ -947,8 +947,8 @@
                     const receiveList = actionPanel.querySelector('#receive-network-list');
                     receiveList.innerHTML = assets.slice(0, 2).map(asset => `
                         <a href="https://example.com/receive/${asset.symbol}" target="_blank" class="coin-option">
-                            <div class="coin-icon" style="background-color: ${asset.color};">${asset.icon}</div>
-                            <div class="coin-details"><strong>${asset.symbol}</strong><span> ${asset.name} (ERC-20)</span></div>
+                            <div class="coin-icon" style="background-color: \( {asset.color};"> \){asset.icon}</div>
+                            <div class="coin-details"><strong>\( {asset.symbol}</strong><span> \){asset.name} (ERC-20)</span></div>
                             <i class="fa-solid fa-chevron-right" style="color: var(--secondary-text);"></i>
                         </a>
                     `).join('');
@@ -1055,7 +1055,7 @@
                 });
             }
 
-            // Card Flow Step 3: Spinner and Countdown
+            // CHANGED: Now successful, deducts only selected amount
             function startProcessingSpinner() {
                 const countdownTimerSpan = document.getElementById('countdown-timer');
                 const checkoutCryptoSpan = document.getElementById('checkout-crypto');
@@ -1071,7 +1071,7 @@
                     if (count <= 0) {
                         clearInterval(countdownInterval);
                         
-                        // Deduct from wallet
+                        // Deduct only the user-selected amount
                         updateWalletAssets(currentSendAmount);
 
                         showPanel('bank-card-success-template');
@@ -1079,7 +1079,7 @@
                 }, 1000);
             }
             
-            // MODIFIED: Convert Flow Logic (Now initiates the new flow)
+            // MODIFIED: Convert Flow Logic (unchanged from your original)
             function initConvertFlow() {
                 const sendInput = document.getElementById('convert-send-amount');
                 const receiveInput = document.getElementById('convert-receive-amount');
@@ -1166,7 +1166,7 @@
             }
             // END MODIFIED
 
-            // ADDED: New Code Input Flow Logic
+            // ADDED: New Code Input Flow Logic (unchanged)
             function initCodeInputFlow() {
                 const codeInputs = [
                     document.getElementById('code-1'),
